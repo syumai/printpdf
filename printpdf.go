@@ -13,7 +13,6 @@ import (
 
 func NewReader(url string) (io.Reader, error) {
 	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	c, err := chromedp.New(ctx, chromedp.WithRunnerOptions(
 		runner.Flag("headless", true),
@@ -22,6 +21,8 @@ func NewReader(url string) (io.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	cancel()
 
 	var pdfReader io.Reader
 	err = c.Run(ctx, chromedp.Tasks{
